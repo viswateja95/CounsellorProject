@@ -1,6 +1,7 @@
 package in.counsellor.service.impl;
 
 import in.counsellor.dto.EnquiryDTO;
+import in.counsellor.dto.EnquiryFilterDTO;
 import in.counsellor.entitty.Counsellor;
 import in.counsellor.entitty.Course;
 import in.counsellor.entitty.Enquiry;
@@ -29,7 +30,7 @@ public class EnquiryServiceImpl implements EnquiryService {
 
     @Override
     public EnquiryDTO addEnquiry(EnquiryDTO enquiryDTO) {
-        // ⭐ Validate input to prevent NullPointerException
+
         if (enquiryDTO.getCounsellorId() == null) {
             throw new RuntimeException("Counsellor ID is required");
         }
@@ -37,15 +38,15 @@ public class EnquiryServiceImpl implements EnquiryService {
             throw new RuntimeException("Course ID is required");
         }
 
-        // Get Counsellor
+
         Counsellor counsellor = counsellorRepo.findById(Math.toIntExact(enquiryDTO.getCounsellorId()))
                 .orElseThrow(() -> new RuntimeException("Counsellor not found"));
 
-        // Get Course - ⭐ Now using courseId from DTO
+
         Course course = courseRepo.findById(enquiryDTO.getCourseId())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        // Create and save Enquiry
+
         Enquiry enquiry = Enquiry.builder()
                 .studentName(enquiryDTO.getStudentName())
                 .studentPhno(enquiryDTO.getStudentPhno())
@@ -70,47 +71,48 @@ public class EnquiryServiceImpl implements EnquiryService {
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<EnquiryDTO> filterEnquiries(Long counsellorId, EnquiryFilterDto filterDto) {
-//        // ⭐ Now passes courseId to the filter query
-//        List<Enquiry> enquiries = enquiryRepo.filterEnquiries(
-//                counsellorId,
-//                filterDto.getCourseId(),      // ⭐ courseId instead of courseName
-//                filterDto.getClassMode(),
-//                filterDto.getEnqStatus(),
-//                filterDto.getStudentName()
-//        );
-//        return enquiries.stream()
-//                .map(this::convertToDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Override
-//    public EnquiryDTO updateEnquiry(Long enqId, EnquiryDTO dto) {
-//        Enquiry enquiry = enquiryRepo.findById(enqId)
-//                .orElseThrow(() -> new RuntimeException("Enquiry not found"));
-//
-//        if (dto.getCourseId() != null) {
-//            Course course = courseRepo.findById(dto.getCourseId())
-//                    .orElseThrow(() -> new RuntimeException("Course not found"));
-//            enquiry.setCourse(course);
-//        }
-//
-//        enquiry.setStudentName(dto.getStudentName());
-//        enquiry.setStudentPhno(dto.getStudentPhno());
-//        enquiry.setClassMode(dto.getClassMode());
-//        enquiry.setEnqStatus(dto.getEnqStatus());
-//        enquiry.setUpdatedDate(LocalDateTime.now());
-//
-//        Enquiry updated = enquiryRepo.save(enquiry);
-//        return convertToDto(updated);
-//    }
-//
-//    @Override
-//    public void deleteEnquiry(Long enqId) {
-//        enquiryRepo.deleteById(enqId);
-//    }
-//
+    @Override
+    public EnquiryDTO updateEnquiry(Long enqId, EnquiryDTO dto) {
+        Enquiry enquiry = enquiryRepo.findById(enqId)
+                .orElseThrow(()-> new RuntimeException("Enquiry is not found"));
+
+        if(dto.getCourseId() != null){
+            Course course = courseRepo.findById(dto.getCourseId())
+                    .orElseThrow(()->new RuntimeException("course not found"));
+            enquiry.setCourse(course);
+        }
+
+        enquiry.setStudentName(dto.getStudentName());
+        enquiry.setStudentPhno(dto.getStudentPhno());
+        enquiry.setClassMode(dto.getClassMode());
+        enquiry.setEnqStatus(dto.getEnqStatus());
+        enquiry.setUpdatedDate(LocalDateTime.now());
+
+        Enquiry updated = enquiryRepo.save(enquiry);
+        return convertToDto(updated);
+    }
+
+    @Override
+    public void deleteEnquiry(Long enqId) {
+
+        enquiryRepo.deleteById(enqId);
+    }
+
+    @Override
+    public List<EnquiryDTO> filterEnquiries(Long counsellorId, EnquiryFilterDTO filterDto) {
+        List<Enquiry> enquiries = enquiryRepo.filterEnquiries(
+                counsellorId,
+                filterDto.getCourseId(),
+                filterDto.getClassMode(),
+                filterDto.getEnqStatus(),
+                filterDto.getStudentName()
+        );
+        return enquiries.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
     private EnquiryDTO convertToDto(Enquiry enquiry) {
         EnquiryDTO dto = new EnquiryDTO();
         dto.setEnqId(enquiry.getEnqId());
