@@ -11,8 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class CounsellorServiceImpl implements CounsellorService {
-    @Autowired
-    private CounsellorRepo counsellorRepo;
+
+    private final CounsellorRepo counsellorRepo;
+
+    public CounsellorServiceImpl(CounsellorRepo counsellorRepo){
+        this.counsellorRepo = counsellorRepo;
+    }
 
     @Override
     public CounsellorDTO register(CounsellorDTO dto) {

@@ -9,7 +9,6 @@ import in.counsellor.repository.CounsellorRepo;
 import in.counsellor.repository.CourseRepo;
 import in.counsellor.repository.EnquiryRepo;
 import in.counsellor.service.EnquiryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,14 +18,17 @@ import java.util.stream.Collectors;
 @Service
 public class EnquiryServiceImpl implements EnquiryService {
 
-    @Autowired
-    private CounsellorRepo counsellorRepo;
+    private final CounsellorRepo counsellorRepo;
 
-    @Autowired
-    private EnquiryRepo enquiryRepo;
+    private final EnquiryRepo enquiryRepo;
 
-    @Autowired
-    private CourseRepo courseRepo;
+    private final CourseRepo courseRepo;
+
+    public EnquiryServiceImpl(CounsellorRepo counsellorRepo, EnquiryRepo enquiryRepo, CourseRepo courseRepo) {
+        this.counsellorRepo = counsellorRepo;
+        this.enquiryRepo = enquiryRepo;
+        this.courseRepo = courseRepo;
+    }
 
     @Override
     public EnquiryDTO addEnquiry(EnquiryDTO enquiryDTO) {

@@ -12,8 +12,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
-    @Autowired
-    private CourseRepo courseRepo;
+
+    private final CourseRepo courseRepo;
+
+    public CourseServiceImpl(CourseRepo courseRepo){
+        this.courseRepo =  courseRepo;
+    }
 
     @Override
     public List<CourseDTO> getCourses() {

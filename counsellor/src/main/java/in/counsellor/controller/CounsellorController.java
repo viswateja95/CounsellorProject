@@ -3,7 +3,6 @@ package in.counsellor.controller;
 import in.counsellor.dto.CounsellorDTO;
 import in.counsellor.dto.LoginDTO;
 import in.counsellor.service.CounsellorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/counsellor")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CounsellorController {
-    @Autowired
-    CounsellorService counsellorService;
+
+    private final CounsellorService counsellorService;
+
+    public CounsellorController(CounsellorService counsellorService){
+        this.counsellorService = counsellorService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<CounsellorDTO> register(@RequestBody CounsellorDTO dto){

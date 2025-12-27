@@ -2,6 +2,7 @@ package in.counsellor.controller;
 
 import in.counsellor.dto.EnquiryDTO;
 import in.counsellor.dto.EnquiryFilterDTO;
+import in.counsellor.service.CourseService;
 import in.counsellor.service.EnquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class EnquiryController {
 
-    @Autowired
-    private EnquiryService enquiryService;
+
+    private final EnquiryService enquiryService;
+
+    public EnquiryController(EnquiryService enquiryService){
+        this.enquiryService = enquiryService;
+    }
 
     @PostMapping("/addEnquiry")
     public ResponseEntity<EnquiryDTO> addEnquiry(@RequestBody EnquiryDTO enquiryDTO) {

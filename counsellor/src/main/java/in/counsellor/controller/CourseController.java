@@ -1,9 +1,7 @@
 package in.counsellor.controller;
 
 import in.counsellor.dto.CourseDTO;
-import in.counsellor.entitty.Course;
 import in.counsellor.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +11,12 @@ import java.util.List;
 @RequestMapping("api/course")
 @CrossOrigin(origins = "http://localhost:4200")
 public class CourseController {
-    @Autowired
-    private CourseService courseService;
+
+    private final CourseService courseService;
+
+    public CourseController(CourseService courseService){
+        this.courseService = courseService;
+    }
 
     @PostMapping("/addCourse")
     public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO courseDTO) {
