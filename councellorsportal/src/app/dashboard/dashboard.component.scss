@@ -1,0 +1,55 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.dashboard-container {
+  padding: 2rem;
+}
+
+.dashboard-container h2 {
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h1 {
+  font-size: 2.5rem;
+  color: #667eea;
+  margin: 1rem 0;
+}
+
+.stat-card.enrolled h1 {
+  color: #4caf50;
+}
+
+.stat-card.open h1 {
+  color: #ff9800;
+}
+
+.stat-card.lost h1 {
+  color: #f44336;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

@@ -1,1 +1,56 @@
-<p>dashboard works!</p>
+<!-- <mat-toolbar color="primary">
+  <span>Counsellor Portal - {{ currentCounsellor?.name }}</span>
+  <span class="spacer"></span>
+  <button mat-button (click)="logout()">Logout</button>
+</mat-toolbar> -->
+
+<div class="dashboard-container">
+  <h2>Welcome to Dashboard</h2>
+<!--
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-header>
+        <mat-card-title>Total Enquiries</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h1>{{ dashboard.totalEnquiries }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card enrolled">
+      <mat-card-header>
+        <mat-card-title>Enrolled</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h1>{{ dashboard.enrolledEnquiries }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card open">
+      <mat-card-header>
+        <mat-card-title>Open</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h1>{{ dashboard.openEnquiries }}</h1>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card lost">
+      <mat-card-header>
+        <mat-card-title>Lost</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h1>{{ dashboard.lostEnquiries }}</h1>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
+
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" (click)="goToAddEnquiry()">
+      <mat-icon>add</mat-icon> Add Enquiry
+    </button>
+    <button mat-raised-button color="accent" (click)="goToViewEnquiries()">
+      <mat-icon>list</mat-icon> View Enquiries
+    </button>
+  </div>
+</div>

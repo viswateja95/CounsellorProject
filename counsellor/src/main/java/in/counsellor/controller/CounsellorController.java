@@ -1,0 +1,38 @@
+package in.counsellor.controller;
+
+import in.counsellor.dto.CounsellorDTO;
+import in.counsellor.dto.LoginDTO;
+import in.counsellor.service.CounsellorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("api/counsellor")
+@CrossOrigin(origins = "http://localhost:4200")
+public class CounsellorController {
+    @Autowired
+    CounsellorService counsellorService;
+
+    @PostMapping("/register")
+    public ResponseEntity<CounsellorDTO> register(@RequestBody CounsellorDTO dto){
+        try{
+            System.out.println("registering the user");
+            CounsellorDTO registered = counsellorService.register(dto);
+            return ResponseEntity.ok(registered);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginDTO> login(@RequestBody LoginDTO logindto){
+        try {
+            System.out.println("counsellor login");
+            LoginDTO login = counsellorService.login(logindto);
+            return ResponseEntity.ok(login);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+}

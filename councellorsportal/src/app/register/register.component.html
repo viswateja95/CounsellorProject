@@ -1,1 +1,45 @@
-<p>register works!</p>
+<div class="register-container">
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>Counsellor Registration</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form #registerForm="ngForm" (ngSubmit)="onRegister()" >
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Full Name</mat-label>
+          <input matInput [(ngModel)]="counsellor.name" name="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="counsellor.email" name="email" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input matInput type="password" [(ngModel)]="counsellor.pwd" name="pwd" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Phone Number</mat-label>
+          <input matInput [(ngModel)]="counsellor.phno" name="phno" required>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="success-message">
+          {{ successMessage }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="!registerForm.valid">
+          Register
+        </button>
+        <button mat-button type="button" (click)="goToLogin()" class="full-width">
+          Already have an account? Login
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,1 +1,63 @@
-<p>enquiry works!</p>
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <span>Add New Enquiry</span>
+</mat-toolbar>
+
+<div class="enquiry-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Enquiry Form</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form #enquiryForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Student Name</mat-label>
+          <input matInput [(ngModel)]="enquiry.studentName" name="studentName" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Student Phone</mat-label>
+          <input matInput [(ngModel)]="enquiry.studentPhno" name="studentPhno" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Course Name</mat-label>
+          <mat-select [(ngModel)]="enquiry.courseName" name="courseName" required>
+            <mat-option *ngFor="let course of courses" [value]="course">
+              {{ course }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Class Mode</mat-label>
+          <mat-select [(ngModel)]="enquiry.classMode" name="classMode" required>
+            <mat-option *ngFor="let mode of classModes" [value]="mode">
+              {{ mode }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="enquiry.enqStatus" name="enqStatus" required>
+            <mat-option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="!enquiryForm.valid">
+          Add Enquiry
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
