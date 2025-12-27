@@ -5,10 +5,8 @@ import in.counsellor.dto.LoginDTO;
 import in.counsellor.entitty.Counsellor;
 import in.counsellor.repository.CounsellorRepo;
 import in.counsellor.service.CounsellorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 @Service
 public class CounsellorServiceImpl implements CounsellorService {
 
