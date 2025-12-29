@@ -1,11 +1,7 @@
 package in.counsellor;
 
-import in.counsellor.entitty.Counsellor;
-import in.counsellor.service.CounsellorService;
-import in.counsellor.service.impl.CounsellorServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class CounsellorApplication {

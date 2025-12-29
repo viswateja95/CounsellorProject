@@ -1,5 +1,12 @@
 package in.counsellor.service.impl;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import in.counsellor.dto.EnquiryDTO;
 import in.counsellor.dto.EnquiryFilterDTO;
 import in.counsellor.entitty.Counsellor;
@@ -9,19 +16,12 @@ import in.counsellor.repository.CounsellorRepo;
 import in.counsellor.repository.CourseRepo;
 import in.counsellor.repository.EnquiryRepo;
 import in.counsellor.service.EnquiryService;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EnquiryServiceImpl implements EnquiryService {
 
     private final CounsellorRepo counsellorRepo;
-
     private final EnquiryRepo enquiryRepo;
-
     private final CourseRepo courseRepo;
 
     public EnquiryServiceImpl(CounsellorRepo counsellorRepo, EnquiryRepo enquiryRepo, CourseRepo courseRepo) {
@@ -31,23 +31,21 @@ public class EnquiryServiceImpl implements EnquiryService {
     }
 
     @Override
+    @Transactional  
     public EnquiryDTO addEnquiry(EnquiryDTO enquiryDTO) {
-
         if (enquiryDTO.getCounsellorId() == null) {
             throw new RuntimeException("Counsellor ID is required");
         }
+
         if (enquiryDTO.getCourseId() == null) {
             throw new RuntimeException("Course ID is required");
         }
 
-
         Counsellor counsellor = counsellorRepo.findById(Math.toIntExact(enquiryDTO.getCounsellorId()))
                 .orElseThrow(() -> new RuntimeException("Counsellor not found"));
 
-
         Course course = courseRepo.findById(enquiryDTO.getCourseId())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-
 
         Enquiry enquiry = Enquiry.builder()
                 .studentName(enquiryDTO.getStudentName())
@@ -55,7 +53,7 @@ public class EnquiryServiceImpl implements EnquiryService {
                 .classMode(enquiryDTO.getClassMode())
                 .enqStatus(enquiryDTO.getEnqStatus())
                 .counsellor(counsellor)
-                .course(course)                          // ⭐ Set course object
+                .course(course)
                 .createdDate(LocalDateTime.now())
                 .build();
 
@@ -66,6 +64,7 @@ public class EnquiryServiceImpl implements EnquiryService {
     }
 
     @Override
+    @Transactional(readOnly = true)  
     public List<EnquiryDTO> getEnquiriesByCounsellor(Long counsellorId) {
         List<Enquiry> enquiries = enquiryRepo.findByCounsellor_CounsellorId(counsellorId);
         return enquiries.stream()
@@ -74,13 +73,14 @@ public class EnquiryServiceImpl implements EnquiryService {
     }
 
     @Override
+    @Transactional  
     public EnquiryDTO updateEnquiry(Long enqId, EnquiryDTO dto) {
         Enquiry enquiry = enquiryRepo.findById(enqId)
-                .orElseThrow(()-> new RuntimeException("Enquiry is not found"));
+                .orElseThrow(() -> new RuntimeException("Enquiry is not found"));
 
         if(dto.getCourseId() != null){
             Course course = courseRepo.findById(dto.getCourseId())
-                    .orElseThrow(()->new RuntimeException("course not found"));
+                    .orElseThrow(() -> new RuntimeException("course not found"));
             enquiry.setCourse(course);
         }
 
@@ -95,12 +95,13 @@ public class EnquiryServiceImpl implements EnquiryService {
     }
 
     @Override
+    @Transactional  
     public void deleteEnquiry(Long enqId) {
-
         enquiryRepo.deleteById(enqId);
     }
 
     @Override
+    @Transactional(readOnly = true)  
     public List<EnquiryDTO> filterEnquiries(Long counsellorId, EnquiryFilterDTO filterDto) {
         List<Enquiry> enquiries = enquiryRepo.filterEnquiries(
                 counsellorId,
@@ -114,7 +115,6 @@ public class EnquiryServiceImpl implements EnquiryService {
                 .collect(Collectors.toList());
     }
 
-
     private EnquiryDTO convertToDto(Enquiry enquiry) {
         EnquiryDTO dto = new EnquiryDTO();
         dto.setEnqId(enquiry.getEnqId());
@@ -124,7 +124,7 @@ public class EnquiryServiceImpl implements EnquiryService {
         dto.setEnqStatus(enquiry.getEnqStatus());
         dto.setCounsellorId(enquiry.getCounsellor().getCounsellorId());
         dto.setCourseId(enquiry.getCourse().getCourseId());
-        dto.setCourseName(enquiry.getCourse().getCourseName());
+        dto.setCourseName(enquiry.getCourse().getCourseName());  
         return dto;
     }
 }

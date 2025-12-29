@@ -1,14 +1,15 @@
 package in.counsellor.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import in.counsellor.dto.CourseDTO;
 import in.counsellor.entitty.Course;
 import in.counsellor.repository.CourseRepo;
 import in.counsellor.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -20,6 +21,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CourseDTO> getCourses() {
         List<Course> courses = courseRepo.findAll();
         return courses.stream()
@@ -28,6 +30,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
     public CourseDTO addCourse(CourseDTO courseDTO) {
 
         Course course = Course.builder()
@@ -39,6 +42,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CourseDTO getCourseById(Long courseId) {
         Course course = courseRepo.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course Not Found"));

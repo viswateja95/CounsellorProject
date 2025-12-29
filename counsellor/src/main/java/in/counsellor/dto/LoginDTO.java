@@ -1,6 +1,5 @@
 package in.counsellor.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data

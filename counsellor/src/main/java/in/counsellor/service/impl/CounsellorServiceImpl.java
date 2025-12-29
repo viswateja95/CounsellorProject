@@ -1,9 +1,11 @@
 package in.counsellor.service.impl;
 
 import in.counsellor.dto.CounsellorDTO;
+import in.counsellor.dto.DashBoardDTO;
 import in.counsellor.dto.LoginDTO;
 import in.counsellor.entitty.Counsellor;
 import in.counsellor.repository.CounsellorRepo;
+import in.counsellor.repository.EnquiryRepo;
 import in.counsellor.service.CounsellorService;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Service;
 public class CounsellorServiceImpl implements CounsellorService {
 
     private final CounsellorRepo counsellorRepo;
+    private final EnquiryRepo enquiryRepo;
 
-    public CounsellorServiceImpl(CounsellorRepo counsellorRepo){
+    public CounsellorServiceImpl(CounsellorRepo counsellorRepo, EnquiryRepo enquiryRepo){
         this.counsellorRepo = counsellorRepo;
+        this.enquiryRepo = enquiryRepo;
     }
 
     @Override
@@ -50,10 +54,18 @@ public class CounsellorServiceImpl implements CounsellorService {
         return response;
     }
 
+    @Override
+    public DashBoardDTO getDashboard(Long counsellorId) {
+        Long totalEnquiries = enquiryRepo.countByCounsellor_CounsellorId(counsellorId);
+        Long enrolledEnquiries = enquiryRepo.countByCounsellor_CounsellorIdAndEnqStatus(counsellorId, "Enrolled");
+        Long lostEnquiries = enquiryRepo.countByCounsellor_CounsellorIdAndEnqStatus(counsellorId, "Lost");
+        Long openEnquiries = enquiryRepo.countByCounsellor_CounsellorIdAndEnqStatus(counsellorId, "Open");
 
-//    @Override
-//    public boolean register(Counsellor counsellor) {
-//        Counsellor savedCounsellor = counsellorRepo.save(counsellor);
-//        return savedCounsellor.getCounsellorId() != null;
-//    }
+        return DashBoardDTO.builder()
+                .totalEnquiries(totalEnquiries)
+                .enrolledEnquiries(enrolledEnquiries)
+                .lostEnquiries(lostEnquiries)
+                .openEnquiries(openEnquiries)
+                .build();
+    }
 }

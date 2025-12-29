@@ -1,15 +1,20 @@
 package in.counsellor.repository;
 
-import in.counsellor.entitty.Enquiry;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import in.counsellor.entitty.Enquiry;
 @Repository
 public interface EnquiryRepo extends JpaRepository<Enquiry, Long> {
-    List<Enquiry> findByCounsellor_CounsellorId(Long counsellorId);
+      @Query("SELECT DISTINCT e FROM Enquiry e " +
+           "JOIN FETCH e.course " +
+           "WHERE e.counsellor.counsellorId = :counsellorId")
+    List<Enquiry> findByCounsellor_CounsellorId(@Param("counsellorId") Long counsellorId);
 
     @Query("SELECT e FROM Enquiry e WHERE e.counsellor.counsellorId = :counsellorId " +
             "AND (:courseId IS NULL OR e.course.courseId = :courseId) " +
@@ -25,4 +30,7 @@ public interface EnquiryRepo extends JpaRepository<Enquiry, Long> {
     );
     Long countByCounsellor_CounsellorId(Long counsellorId);
     Long countByCounsellor_CounsellorIdAndEnqStatus(Long counsellorId, String status);
+   
+    @Query("SELECT e FROM Enquiry e JOIN FETCH e.course WHERE e.enqId = :enqId")
+    Optional<Enquiry> findByIdWithCourse(@Param("enqId") Long enqId);
 }

@@ -5,10 +5,32 @@ spring:
     url: jdbc:mysql://localhost:3306/counsellor
     username: root
     password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
     show-sql: true
+    open-in-view: false
+  web:
+    resources:
+      add-mappings: false
+
+logging:
+  level:
+    root: INFO
+    in.counsellor: DEBUG
+    in.counsellor.filter: INFO
+    in.counsellor.exception: DEBUG
+    org.springframework.web: WARN
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/application.log
+    max-size: 10MB
+    max-history: 30

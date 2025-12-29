@@ -1,19 +1,28 @@
 package in.counsellor.controller;
 
-import in.counsellor.dto.EnquiryDTO;
-import in.counsellor.dto.EnquiryFilterDTO;
-import in.counsellor.service.CourseService;
-import in.counsellor.service.EnquiryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
-@RestController
-@RequestMapping("api/enquiry")
-public class EnquiryController {
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import in.counsellor.dto.ApiResponse;
+import in.counsellor.dto.EnquiryDTO;
+import in.counsellor.dto.EnquiryFilterDTO;
+import in.counsellor.service.EnquiryService;
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@RequestMapping("/api/enquiry")
+@Slf4j
+public class EnquiryController {
 
     private final EnquiryService enquiryService;
 
@@ -22,33 +31,44 @@ public class EnquiryController {
     }
 
     @PostMapping("/addEnquiry")
-    public ResponseEntity<EnquiryDTO> addEnquiry(@RequestBody EnquiryDTO enquiryDTO) {
+    public ResponseEntity<ApiResponse<EnquiryDTO>> addEnquiry(@RequestBody EnquiryDTO enquiryDTO) {
+        log.info("Adding new enquiry for student: {}", enquiryDTO.getStudentName());
         EnquiryDTO saved = enquiryService.addEnquiry(enquiryDTO);
-        return ResponseEntity.ok(saved);
+        ApiResponse<EnquiryDTO> response = ApiResponse.success(saved, "Enquiry added successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/counsellor/{counsellorId}")
-    public ResponseEntity<List<EnquiryDTO>> getEnquiries(@PathVariable Long counsellorId) {
+    public ResponseEntity<ApiResponse<List<EnquiryDTO>>> getEnquiries(@PathVariable Long counsellorId) {
+        log.info("Fetching enquiries for counsellor: {}", counsellorId);
         List<EnquiryDTO> enquiries = enquiryService.getEnquiriesByCounsellor(counsellorId);
-        return ResponseEntity.ok(enquiries);
+        ApiResponse<List<EnquiryDTO>> response = ApiResponse.success(enquiries, "Enquiries retrieved successfully");
+        return ResponseEntity.ok(response);
     }
-    @PostMapping("/filter/{counsellorId}")
-    public ResponseEntity<List<EnquiryDTO>> filterEnquiries(
+
+    @PostMapping("/filterEnquiry/{counsellorId}")
+    public ResponseEntity<ApiResponse<List<EnquiryDTO>>> filterEnquiries(
             @PathVariable Long counsellorId,
             @RequestBody EnquiryFilterDTO filterDto) {
+        log.info("Filtering enquiries for counsellor: {} with filter: {}", counsellorId, filterDto);
         List<EnquiryDTO> enquiries = enquiryService.filterEnquiries(counsellorId, filterDto);
-        return ResponseEntity.ok(enquiries);
+        ApiResponse<List<EnquiryDTO>> response = ApiResponse.success(enquiries, "Enquiries filtered successfully");
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{enqId}")
-    public ResponseEntity<EnquiryDTO> updateEnquiry(@PathVariable Long enqId, @RequestBody EnquiryDTO dto) {
+    @PutMapping("/updateEnquiry/{enqId}")
+    public ResponseEntity<ApiResponse<EnquiryDTO>> updateEnquiry(@PathVariable Long enqId, @RequestBody EnquiryDTO dto) {
+        log.info("Updating enquiry: {}", enqId);
         EnquiryDTO updated = enquiryService.updateEnquiry(enqId, dto);
-        return ResponseEntity.ok(updated);
+        ApiResponse<EnquiryDTO> response = ApiResponse.success(updated, "Enquiry updated successfully");
+        return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{enqId}")
-    public ResponseEntity<Void> deleteEnquiry(@PathVariable Long enqId) {
+    @DeleteMapping("/deleteEnquiry/{enqId}")
+    public ResponseEntity<ApiResponse<Void>> deleteEnquiry(@PathVariable Long enqId) {
+        log.info("Deleting enquiry: {}", enqId);
         enquiryService.deleteEnquiry(enqId);
-        return ResponseEntity.ok().build();
+        ApiResponse<Void> response = ApiResponse.success(null, "Enquiry deleted successfully");
+        return ResponseEntity.ok(response);
     }
 }
