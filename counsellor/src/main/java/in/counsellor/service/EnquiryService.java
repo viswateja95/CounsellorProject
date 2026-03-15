@@ -13,6 +13,7 @@ public interface EnquiryService {
     public EnquiryDTO updateEnquiry(Long enqId, EnquiryDTO dto);
 
     public void deleteEnquiry(Long enqId);
-    
+
+
     public List<EnquiryDTO> filterEnquiries(Long counsellorId, EnquiryFilterDTO filterDto);
 }

@@ -16,7 +16,8 @@ public interface EnquiryRepo extends JpaRepository<Enquiry, Long> {
            "WHERE e.counsellor.counsellorId = :counsellorId")
     List<Enquiry> findByCounsellor_CounsellorId(@Param("counsellorId") Long counsellorId);
 
-    @Query("SELECT e FROM Enquiry e WHERE e.counsellor.counsellorId = :counsellorId " +
+    @Query("SELECT e FROM Enquiry" +
+            " e WHERE e.counsellor.counsellorId = :counsellorId " +
             "AND (:courseId IS NULL OR e.course.courseId = :courseId) " +
             "AND (:classMode IS NULL OR e.classMode = :classMode) " +
             "AND (:enqStatus IS NULL OR e.enqStatus = :enqStatus) " +

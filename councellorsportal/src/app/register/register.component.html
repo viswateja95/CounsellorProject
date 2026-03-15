@@ -1,45 +1,73 @@
-<div class="register-container">
-  <mat-card class="register-card">
-    <mat-card-header>
-      <mat-card-title>Counsellor Registration</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form #registerForm="ngForm" (ngSubmit)="onRegister()" >
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Full Name</mat-label>
-          <input matInput [(ngModel)]="counsellor.name" name="name" required>
-        </mat-form-field>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Register as Counsellor</h4>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                        <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ successMessage }}
+                        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="counsellor.email" name="email" required>
-        </mat-form-field>
+                        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ errorMessage }}
+                        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" [(ngModel)]="counsellor.pwd" name="pwd" required>
-        </mat-form-field>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" formControlName="name"
+                                [class.is-invalid]="submitted && f['name'].errors">
+                            <div *ngIf="submitted && f['name'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['name'].errors['required']">Name is required</span>
+                                <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters</span>
+                            </div>
+                        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Phone Number</mat-label>
-          <input matInput [(ngModel)]="counsellor.phno" name="phno" required>
-        </mat-form-field>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" formControlName="email"
+                                [class.is-invalid]="submitted && f['email'].errors">
+                            <div *ngIf="submitted && f['email'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['email'].errors['required']">Email is required</span>
+                                <span *ngIf="f['email'].errors['email']">Email must be valid</span>
+                            </div>
+                        </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
+                        <div class="mb-3">
+                            <label for="phno" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phno" formControlName="phno"
+                                [class.is-invalid]="submitted && f['phno'].errors">
+                            <div *ngIf="submitted && f['phno'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['phno'].errors['required']">Phone is required</span>
+                                <span *ngIf="f['phno'].errors['pattern']">Phone must be 10 digits</span>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="pwd" formControlName="pwd"
+                                [class.is-invalid]="submitted && f['pwd'].errors">
+                            <div *ngIf="submitted && f['pwd'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['pwd'].errors['required']">Password is required</span>
+                                <span *ngIf="f['pwd'].errors['minlength']">Password must be at least 6 characters</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ loading ? 'Registering...' : 'Register' }}
+                        </button>
+                    </form>
+
+                    <hr>
+                    <p class="text-center mb-0">
+                        Already registered? <a routerLink="/login">Login here</a>
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <div *ngIf="successMessage" class="success-message">
-          {{ successMessage }}
-        </div>
-
-        <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="!registerForm.valid">
-          Register
-        </button>
-        <button mat-button type="button" (click)="goToLogin()" class="full-width">
-          Already have an account? Login
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+    </div>
 </div>

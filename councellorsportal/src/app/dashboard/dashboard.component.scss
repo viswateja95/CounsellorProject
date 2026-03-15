@@ -6,9 +6,22 @@
   padding: 2rem;
 }
 
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+}
+
 .dashboard-container h2 {
   margin-bottom: 2rem;
   color: #333;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
 }
 
 .stats-grid {
@@ -16,6 +29,14 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .stat-card {
@@ -35,6 +56,13 @@
   margin: 1rem 0;
 }
 
+@media (max-width: 768px) {
+  .stat-card h1 {
+    font-size: 2rem;
+    margin: 0.5rem 0;
+  }
+}
+
 .stat-card.enrolled h1 {
   color: #4caf50;
 }
@@ -52,4 +80,87 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    gap: 0.5rem;
+  }
+}
+
+// Additional responsive styles for dashboard elements
+.avatar-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+  .avatar-circle {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+}
+
+.icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.action-card {
+  border: none;
+  border-radius: 10px;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card {
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.border-left-primary {
+  border-left-color: #007bff !important;
+}
+
+.border-left-success {
+  border-left-color: #28a745 !important;
+}
+
+.border-left-warning {
+  border-left-color: #ffc107 !important;
+}
+
+.border-left-danger {
+  border-left-color: #dc3545 !important;
+}
+
+@media (max-width: 768px) {
+  .stats-card {
+    padding: 0.5rem;
+  }
 }

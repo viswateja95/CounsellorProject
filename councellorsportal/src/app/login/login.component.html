@@ -1,31 +1,51 @@
-<div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>Counsellor Login</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <form #loginForm="ngForm" (ngSubmit)="onLogin()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" [(ngModel)]="loginRequest.email" name="email" required>
-        </mat-form-field>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Counsellor Login</h4>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                        <!-- Error Message -->
+                        <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ errorMessage }}
+                        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" [(ngModel)]="loginRequest.pwd" name="pwd" required>
-        </mat-form-field>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" formControlName="email"
+                                [class.is-invalid]="submitted && f['email'].errors">
+                            <div *ngIf="submitted && f['email'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['email'].errors['required']">Email is required</span>
+                                <span *ngIf="f['email'].errors['email']">Email must be valid</span>
+                            </div>
+                        </div>
 
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="pwd" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="pwd" formControlName="pwd"
+                                [class.is-invalid]="submitted && f['pwd'].errors">
+                            <div *ngIf="submitted && f['pwd'].errors" class="invalid-feedback d-block">
+                                <span *ngIf="f['pwd'].errors['required']">Password is required</span>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-success w-100" [disabled]="loading">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                            {{ loading ? 'Logging in...' : 'Login' }}
+                        </button>
+                    </form>
+
+                    <hr>
+                    <p class="text-center mb-0">
+                        Don't have an account? <a routerLink="/register">Register here</a>
+                    </p>
+                </div>
+            </div>
         </div>
-
-        <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="!loginForm.valid">
-          Login
-        </button>
-        <button mat-button type="button" (click)="goToRegister()" class="full-width">
-          Don't have an account? Register
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+    </div>
 </div>

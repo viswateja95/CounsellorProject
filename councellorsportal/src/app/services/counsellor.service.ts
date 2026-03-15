@@ -1,38 +1,47 @@
-import { Counsellor } from './../model/counsellor.model';
-import { HttpClient } from '@angular/common/http';
+import { Counsellor, DashboardStats, LoginRequest } from './../model/counsellor.model';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ApiResponse } from '../model/api-response.model';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CounsellorService {
 
-  constructor(private http: HttpClient) { }
-  private baseUrl = "http://localhost:8080/api/counsellor";
+  constructor(private apiService: ApiService) { }
 
-  register(counsellor: Counsellor):Observable<any> {
-    console.log("In service"+counsellor);
-    console.log(`${this.baseUrl}/register`, counsellor);
-    return this.http.post(`${this.baseUrl}/register`, counsellor);
-  }
-  onLogin(email: string, pwd: string): Observable<any> {
-    console.log("In service"+email+pwd);
-    return this.http.post(`${this.baseUrl}/login`, { email, pwd });
-  }
-  setCurrentCounsellor(counsellor: Counsellor): void {
-    localStorage.setItem('currentCounsellor', JSON.stringify(counsellor));
-  }
-  getCurrentCounsellor(): Counsellor | null {
-    const counsellorData = localStorage.getItem('currentCounsellor');
-    if (!counsellorData) {
-      return null;
+    register(counsellor: Counsellor): Observable<ApiResponse<Counsellor>> {
+        return this.apiService.post<Counsellor>('/counsellor/register', counsellor);
     }
-    try {
-      return JSON.parse(counsellorData) as Counsellor;
-    } catch (e) {
-      console.error('Failed to parse currentCounsellor from localStorage', e);
-      return null;
+
+    login(loginRequest: LoginRequest): Observable<ApiResponse<Counsellor>> {
+        return this.apiService.post<Counsellor>('/counsellor/login', loginRequest);
     }
-  }
+
+    getDashboard(counsellorId: number): Observable<ApiResponse<DashboardStats>> {
+        return this.apiService.get<DashboardStats>(`/counsellor/dashboard/${counsellorId}`);
+    }
+
+    setCurrentCounsellor(counsellor: Counsellor): void {
+        localStorage.setItem('currentCounsellor', JSON.stringify(counsellor));
+    }
+
+    getCurrentCounsellor(): Counsellor | null {
+        const data = localStorage.getItem('currentCounsellor');
+        return data ? JSON.parse(data) : null;
+    }
+
+    logout(): void {
+        localStorage.removeItem('currentCounsellor');
+    }
+
+    isLoggedIn(): boolean {
+        return this.getCurrentCounsellor() !== null;
+    }
+
+    getCurrentCounsellorId(): number | null {
+        const counsellor = this.getCurrentCounsellor();
+        return counsellor ? counsellor.counsellorId || null : null;
+    }
 }

@@ -1,56 +1,209 @@
-<!-- <mat-toolbar color="primary">
-  <span>Counsellor Portal - {{ currentCounsellor?.name }}</span>
-  <span class="spacer"></span>
-  <button mat-button (click)="logout()">Logout</button>
-</mat-toolbar> -->
+<div class="container-fluid mt-4">
+    <!-- Header with User Info and Logout -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="d-flex align-items-center" *ngIf="currentCounsellor">
+                <div class="avatar-circle me-3">
+                    {{ currentCounsellor?.name?.charAt(0)?.toUpperCase() || 'C' }}
+                </div>
+                <div>
+                    <h2 class="mb-0">Welcome, {{ currentCounsellor?.name || 'Counsellor' }}</h2>
+                    <p class="text-muted mb-0" *ngIf="currentCounsellor?.email">
+                        <i class="bi bi-envelope"></i> {{ currentCounsellor.email }}
+                    </p>
+                    <p class="text-muted mb-0" *ngIf="currentCounsellor?.phno">
+                        <i class="bi bi-telephone"></i> {{ currentCounsellor.phno }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-outline-danger btn-lg" (click)="logout()">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </button>
+        </div>
+    </div>
 
-<div class="dashboard-container">
-  <h2>Welcome to Dashboard</h2>
-<!--
-  <div class="stats-grid">
-    <mat-card class="stat-card">
-      <mat-card-header>
-        <mat-card-title>Total Enquiries</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h1>{{ dashboard.totalEnquiries }}</h1>
-      </mat-card-content>
-    </mat-card>
+    <!-- ⭐ MAIN ACTION BUTTONS (Add & View Enquiries) -->
+    <div class="row mb-5">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 h-100 action-card hover-lift">
+                <div class="card-body text-center py-5">
+                    <div class="icon-circle bg-primary mb-4">
+                        <i class="bi bi-plus-circle-fill text-white"></i>
+                    </div>
+                    <h4 class="card-title">Add New Enquiry</h4>
+                    <p class="card-text text-muted mb-4">
+                        Create a new student enquiry for your courses
+                    </p>
+                    <button class="btn btn-primary btn-lg" (click)="goToAddEnquiry()">
+                        <i class="bi bi-plus-lg"></i> Add Enquiry
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 h-100 action-card hover-lift">
+                <div class="card-body text-center py-5">
+                    <div class="icon-circle bg-success mb-4">
+                        <i class="bi bi-list-check text-white"></i>
+                    </div>
+                    <h4 class="card-title">View Enquiries</h4>
+                    <p class="card-text text-muted mb-4">
+                        View all enquiries with filters, search, and sorting
+                    </p>
+                    <button class="btn btn-success btn-lg" (click)="goToViewEnquiries()">
+                        <i class="bi bi-eye"></i> View Enquiries
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <mat-card class="stat-card enrolled">
-      <mat-card-header>
-        <mat-card-title>Enrolled</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h1>{{ dashboard.enrolledEnquiries }}</h1>
-      </mat-card-content>
-    </mat-card>
+    <!-- Dashboard Statistics -->
+    <div class="row mb-4" *ngIf="dashboardStats">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-left-primary">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="text-muted text-uppercase mb-2">Total Enquiries</h6>
+                            <h2 class="mb-0 text-primary">{{ dashboardStats?.totalEnquiries || 0 }}</h2>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="bi bi-graph-up text-primary" style="font-size: 2rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <mat-card class="stat-card open">
-      <mat-card-header>
-        <mat-card-title>Open</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h1>{{ dashboard.openEnquiries }}</h1>
-      </mat-card-content>
-    </mat-card>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-left-success">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="text-muted text-uppercase mb-2">Enrolled</h6>
+                            <h2 class="mb-0 text-success">{{ dashboardStats?.enrolledEnquiries || 0 }}</h2>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="bi bi-check-circle text-success" style="font-size: 2rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <mat-card class="stat-card lost">
-      <mat-card-header>
-        <mat-card-title>Lost</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <h1>{{ dashboard.lostEnquiries }}</h1>
-      </mat-card-content>
-    </mat-card>
-  </div> -->
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-left-warning">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="text-muted text-uppercase mb-2">Open</h6>
+                            <h2 class="mb-0 text-warning">{{ dashboardStats?.openEnquiries || 0 }}</h2>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="bi bi-hourglass text-warning" style="font-size: 2rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <div class="action-buttons">
-    <button mat-raised-button color="primary" (click)="goToAddEnquiry()">
-      <mat-icon>add</mat-icon> Add Enquiry
-    </button>
-    <button mat-raised-button color="accent" (click)="goToViewEnquiries()">
-      <mat-icon>list</mat-icon> View Enquiries
-    </button>
-  </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card border-left-danger">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h6 class="text-muted text-uppercase mb-2">Lost</h6>
+                            <h2 class="mb-0 text-danger">{{ dashboardStats?.lostEnquiries || 0 }}</h2>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <i class="bi bi-x-circle text-danger" style="font-size: 2rem; opacity: 0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Enquiries Preview -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Recent Enquiries (Last 5)
+                    </h5>
+                    <button class="btn btn-sm btn-outline-primary" (click)="goToViewEnquiries()">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <!-- Loading Spinner -->
+                    <div *ngIf="loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3 text-muted">Loading enquiries...</p>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div *ngIf="!loading && errorMessage" class="alert alert-danger m-3">
+                        {{ errorMessage }}
+                    </div>
+
+                    <!-- Recent Enquiries Table -->
+                    <div *ngIf="!loading && recentEnquiries && recentEnquiries.length > 0" class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student Name</th>
+                                    <th>Phone</th>
+                                    <th>Course</th>
+                                    <th>Mode</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let enquiry of recentEnquiries" class="align-middle">
+                                    <td>
+                                        <strong>#{{ enquiry?.enqId || '-' }}</strong>
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">{{ enquiry?.studentName || '-' }}</div>
+                                        <small class="text-muted">{{ enquiry?.studentPhno || '-' }}</small>
+                                    </td>
+                                    <td>{{ enquiry?.studentPhno || '-' }}</td>
+                                    <td>{{ enquiry?.courseName || '-' }}</td>
+                                    <td>
+                                        <span [ngClass]="getModeClass(enquiry?.classMode || '')" *ngIf="enquiry?.classMode">
+                                            {{ enquiry.classMode }}
+                                        </span>
+                                        <span *ngIf="!enquiry?.classMode">-</span>
+                                    </td>
+                                    <td>
+                                        <span [ngClass]="getStatusClass(enquiry?.enqStatus || '')" *ngIf="enquiry?.enqStatus">
+                                            {{ enquiry.enqStatus }}
+                                        </span>
+                                        <span *ngIf="!enquiry?.enqStatus">-</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div *ngIf="!loading && (!recentEnquiries || recentEnquiries.length === 0)" class="text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                        <p class="mt-3 text-muted">No enquiries yet</p>
+                        <button class="btn btn-primary mt-2" (click)="goToAddEnquiry()">
+                            <i class="bi bi-plus-lg"></i> Create First Enquiry
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

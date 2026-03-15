@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Enquiry } from '../model/enquiry.model';
-import { EnquiryServiceService } from '../services/enquiry.service';
+import { EnquiryService } from '../services/enquiry.service';
 import { CounsellorService } from '../services/counsellor.service';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,50 +24,74 @@ import {MatSelectModule} from '@angular/material/select';
         MatToolbarModule,
         FormsModule,
       MatIconModule,
-    MatSelectModule],
+    MatSelectModule,
+    ReactiveFormsModule,],
   templateUrl: './enquiry.component.html',
   styleUrl: './enquiry.component.scss'
 })
 export class EnquiryComponent implements OnInit {
-  enquiry: Enquiry = {
-    studentName: '',
-    studentPhno: '',
-    courseName: '',
-    classMode: '',
-    enqStatus: 'Open',
-    counsellorId: localStorage.getItem("counsellorId") ? Number(localStorage.getItem("counsellorId")) : undefined
-  };
+   enquiryForm!: FormGroup;
+    loading = false;
+    submitted = false;
+    errorMessage = '';
+    successMessage = '';
+    classModes = ['Online', 'Offline', 'Hybrid'];
+    statuses = ['Open', 'Enrolled', 'Lost'];
 
-  courses = ['Java Full Stack', 'Python Full Stack', 'MERN Stack', 'Data Science', 'DevOps'];
-  classModes = ['Online', 'Offline', 'Hybrid'];
-  statuses = ['Open', 'Enrolled', 'Lost'];
-  errorMessage = '';
+    constructor(
+        private formBuilder: FormBuilder,
+        private enquiryService: EnquiryService,
+        private counsellorService: CounsellorService,
+        private router: Router
+    ) { }
 
-  constructor(private enquiryService: EnquiryServiceService,
-    private counsellorService: CounsellorService,
-    private router: Router) { }
-
-
-    ngOnInit(){
-      const currentCounsellor = this.counsellorService.getCurrentCounsellor();
-      if(currentCounsellor){
-        this.enquiry.counsellorId = currentCounsellor.counsellorId;
-      }
+    ngOnInit(): void {
+        this.initializeForm();
     }
 
-    onSubmit(){
-      this.enquiryService.addEnquiry(this.enquiry).subscribe({
-        next: (response) =>{
-          this.router.navigate(['/view-enquiries']);
-        },error: (error) =>{
-          this.errorMessage = 'Failed to add enquiry.';
-          console.error('Error adding enquiry:', error);
+    initializeForm(): void {
+        const counsellorId = this.counsellorService.getCurrentCounsellorId();
+
+        this.enquiryForm = this.formBuilder.group({
+            studentName: ['', [Validators.required, Validators.minLength(3)]],
+            studentPhno: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+            courseName: ['', Validators.required],
+            classMode: ['', Validators.required],
+            enqStatus: ['Open', Validators.required],
+            counsellorId: [counsellorId, Validators.required]
+        });
+    }
+
+    get f() {
+        return this.enquiryForm.controls;
+    }
+
+    onSubmit(): void {
+        this.submitted = true;
+        this.errorMessage = '';
+        this.successMessage = '';
+
+        if (this.enquiryForm.invalid) {
+            return;
         }
-      })
 
-    }
+        this.loading = true;
+        const enquiry: Enquiry = this.enquiryForm.value;
 
-    goBack(){
-      this.router.navigate(['/dashboard']);
+        this.enquiryService.addEnquiry(enquiry).subscribe({
+            next: (response) => {
+                this.successMessage = response.message;
+                setTimeout(() => {
+                    this.router.navigate(['/dashboard']);
+                }, 2000);
+            },
+            error: (error) => {
+                this.errorMessage = error.message || 'Failed to add enquiry';
+                this.loading = false;
+            },
+            complete: () => {
+                this.loading = false;
+            }
+        });
     }
 }

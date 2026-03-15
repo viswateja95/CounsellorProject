@@ -6,14 +6,14 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { EnquiryComponent } from './enquiry/enquiry.component';
 import { ViewenquiryComponent } from './viewenquiry/viewenquiry.component';
+import { authGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
-  { path: 'home', component: DashboardComponent },
+  { path: 'home', component: DashboardComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'add-enquiry', component: EnquiryComponent },
-  { path: 'view-enquiries', component: ViewenquiryComponent },
-  // { path: 'dashboard', component: DashboardComponent },
+  { path: 'add-enquiry', component: EnquiryComponent, canActivate: [authGuard] },
+  { path: 'view-enquiries', component: ViewenquiryComponent, canActivate: [authGuard] },
 
-  { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];
